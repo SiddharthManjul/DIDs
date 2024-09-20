@@ -1,1 +1,1 @@
-pub mod convert_binary;
+pub mod converter_functions;

@@ -3,7 +3,7 @@ mod functions;
 // use tfhe::{generate_keys, set_server_key, ConfigBuilder, FheUint16, FheUint32};
 // use tfhe::prelude::*;
 
-use functions::convert_binary::string_to_binary;
+use functions::converter_functions::{string_to_binary, remove_symbol};
 
 fn main() {
 
@@ -33,8 +33,27 @@ fn main() {
     // println!("{:?}", clear_add);
     // assert_eq!(decrypted_add, clear_add);
 
+
+
     let msg: &str = "hi, How are you?";
-    let converted_msg: Vec<String> = string_to_binary(&msg);
+    let converted_msg: Vec<u32> = string_to_binary(&msg);
     println!("Original message is {:?}", msg);
     print!("{:#?}", converted_msg);
+
+    let sum: u32 = converted_msg.iter().sum();
+    println!("{:?}", sum);
+
+    let date = "99/99/9999";
+
+    match remove_symbol(date) {
+        Ok(integers) => {
+            println!("Parsed Integers: {:?}", integers);
+            let total: u16 = integers.iter().sum();
+            println!("{}", total);
+        }
+        Err(e) => {
+            println!("Error: {}", e);
+        }
+    };
+
 }
