@@ -1,7 +1,7 @@
 use regex::Regex;
 
-pub fn string_to_binary(msg: &str) -> Vec<u32> {
-    msg.bytes().map(|x| x as u32).collect()
+pub fn string_to_binary(msg: &str) -> Vec<u8> {
+    msg.bytes().map(|x| x ).collect()
 }
 
 pub fn remove_symbol(str: &str) -> Result<Vec<u16>, &'static str> {
