@@ -3,6 +3,8 @@ use std::io::Cursor;
 use tfhe::{ConfigBuilder, ServerKey, generate_keys, set_server_key, FheUint32};
 use tfhe::prelude::*;
 
+use get_size::GetSize;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = ConfigBuilder::default().build();
 
@@ -10,7 +12,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (client_key, server_key) = generate_keys(config);
 
     // Encrypt u32 values instead of u8
-    let msg1: u32 = 1;
+    let msg1: u32 = 10000;
     let msg2: u32 = 0;
     let msg3: u32 = 2;
 
@@ -25,6 +27,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     bincode::serialize_into(&mut serialized_data, &value_2)?;
     bincode::serialize_into(&mut serialized_data, &value_3)?;
 
+    let serialized_server_key = bincode::serialize(&server_key)?;
+    println!("Size of server_key: {} bytes", serialized_server_key.len());
+
+    let serialized_value_1 = bincode::serialize(&value_1)?;
+    println!("Size of value_1: {} bytes", serialized_value_1.len());
+
+
     // Simulate sending serialized data to a server and getting back the result
     let serialized_result = server_function(&serialized_data)?;
     let result: FheUint32 = bincode::deserialize(&serialized_result)?;
@@ -36,7 +45,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(output, msg1 + msg2 + msg3);
     println!("Decrypted output: {}", output);
 
-    println!("Size of serialized_data: {} bytes", serialized_data.len());
+    println!("Size of serialized_data: {} bytes", serialized_data.get_size());
+
     Ok(())
 }
 
